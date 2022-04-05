@@ -1,0 +1,32 @@
+server:
+  port: 8081
+  tomcat:
+    uri-encoding: UTF-8
+  servlet:
+    context-path: /demo
+
+
+spring:
+  application:
+    name: dubbo-consumer
+
+demo:
+  service:
+    version: 1.0.0
+
+dubbo:
+  registry:
+    address: zookeeper://127.0.0.1:2181
+    timeout: 30000
+    file: ${user.home}/dubbo-cache/${spring.application.name}/dubbo.cache
+    group: testDubbo
+
+  #元数据中心
+  metadata-report:
+    address: zookeeper://127.0.0.1:2181
+
+  config-center:
+    address: zookeeper://127.0.0.1:2181
+
+knife4j:
+  production: false
