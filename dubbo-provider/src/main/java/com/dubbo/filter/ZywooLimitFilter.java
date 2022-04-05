@@ -3,7 +3,6 @@ package com.dubbo.filter;
 import org.apache.dubbo.common.constants.CommonConstants;
 import org.apache.dubbo.common.extension.Activate;
 import org.apache.dubbo.rpc.*;
-import org.apache.dubbo.rpc.filter.tps.DefaultTPSLimiter;
 import org.apache.dubbo.rpc.filter.tps.TPSLimiter;
 
 /**
@@ -11,7 +10,7 @@ import org.apache.dubbo.rpc.filter.tps.TPSLimiter;
  * @Date: 2022/4/1 20:46
  * @Description: 自定义限流实现
  */
-@Activate(group = CommonConstants.PROVIDER)
+@Activate(group = CommonConstants.PROVIDER, value = "zywoo")
 public class ZywooLimitFilter implements Filter {
 
     //Dubbo默认实现
