@@ -1,6 +1,5 @@
 package com.dubbo.filter;
 
-import com.dubbo.limit.FixedWindowItem;
 import com.dubbo.limit.LeakyBucketItem;
 import com.dubbo.limit.LimitItem;
 import com.dubbo.limit.SlidingWindowItem;
@@ -38,15 +37,6 @@ public class ZywooTPSLimiter implements TPSLimiter {
                     stats.putIfAbsent(serviceKey, new LeakyBucketItem(serviceKey, rate, 0L, currentTime, capacity));
                     break;
                 }
-                //固定窗口限流算法
-                case "fixedWindow": {
-                    //默认1000毫秒滑动一次
-                    long windowUnit = url.getParameter("windowUnit", 1000L);
-                    //获取限流次数
-                    int limitCount = url.getParameter("limitCount", 0);
-                    long currentTime = System.currentTimeMillis();
-                    stats.putIfAbsent(serviceKey, new FixedWindowItem(serviceKey, windowUnit, currentTime, 0, limitCount));
-                }
                 //滑动窗口限流算法
                 case "slidingWindow": {
                     //限流个数
@@ -57,6 +47,8 @@ public class ZywooTPSLimiter implements TPSLimiter {
                     int intervalInMs = url.getParameter("intervalInMs", 1000);
                     stats.putIfAbsent(serviceKey,new SlidingWindowItem(limitCount,sampleCount,intervalInMs));
                 }
+                //令牌桶算法
+                //TODO
                 //无获取到限流算法,直接放行
                 default: {
                     return true;
