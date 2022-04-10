@@ -1,7 +1,10 @@
 package com.dubbo.limit;
 
-import java.util.Random;
+import com.google.common.util.concurrent.RateLimiter;
+
 import java.util.concurrent.atomic.AtomicInteger;
+
+import static java.util.concurrent.TimeUnit.NANOSECONDS;
 
 /**
  * @Auther: Zywoo Lee
@@ -11,10 +14,19 @@ import java.util.concurrent.atomic.AtomicInteger;
 public class Test {
 
 
+    /**
+     *
+     * 功能描述:滑动窗口算法测试
+     *
+     * @param:
+     * @return:
+     * @auther: Zywoo Lee
+     * @date: 2022/4/6 09:08
+     */
     @org.junit.Test
     public void SlidingWindowTest() throws InterruptedException {
-        //时间窗长度为1s,分割为10个滑动窗口,时间窗内只能有100个放行
-        LimitItem slidingWindowItem = new SlidingWindowItem(150,10,1000);
+        //时间窗长度为1s,分割为10个滑动窗口,时间窗内只能有150个放行
+        LimitItem slidingWindowItem = new SlidingWindowItem("SlidingWindowTest",150,10,1000);
         AtomicInteger allowed = new AtomicInteger(0);
         AtomicInteger limited = new AtomicInteger(0);
         long beginTime = System.currentTimeMillis();
@@ -51,7 +63,7 @@ public class Test {
     @org.junit.Test
     public void LeakyBucketTest() throws InterruptedException {
         // 桶容量10,每秒流出速率5
-        LimitItem leakyBucketItem = new LeakyBucketItem("ZywooTest", 5, 0L, System.currentTimeMillis(), 10);
+        LimitItem leakyBucketItem = new LeakyBucketItem("ZywooTest", 5, System.currentTimeMillis(), 10);
         AtomicInteger allowed = new AtomicInteger(0);
         AtomicInteger limited = new AtomicInteger(0);
         long beginTime = System.currentTimeMillis();
@@ -76,5 +88,20 @@ public class Test {
         System.out.println("限制次数:" + limited.get() + "通过次数:" + allowed.get());
 
     }
+
+
+    @org.junit.Test
+    public void GuavaRateLimitTest(){
+        long num =  NANOSECONDS.toMicros(100L);
+
+        //服务每秒允许的TPS
+        RateLimiter limit = RateLimiter.create(0.2);
+        //limit.tryAcquire()
+        while (true) {
+            System.out.println("get 1 tokens: " + limit.acquire(1) + "s");
+        }
+    }
+
+
 
 }

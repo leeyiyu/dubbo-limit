@@ -1,5 +1,6 @@
 package com.dubbo.filter;
 
+import com.dubbo.limit.GuavaRateLimit;
 import com.dubbo.limit.LeakyBucketItem;
 import com.dubbo.limit.LimitItem;
 import com.dubbo.limit.SlidingWindowItem;
@@ -29,15 +30,15 @@ public class ZywooTPSLimiter implements TPSLimiter {
         LimitItem limitItem = stats.get(serviceKey);
         if (limitItem == null) {
             switch (strategy) {
-                //漏桶限流算法
+                //漏桶限流
                 case "leakyBucket": {
                     long rate = url.getParameter("rate", -1L);
                     long capacity = url.getParameter("capacity", -1L);
                     long currentTime = System.currentTimeMillis();
-                    stats.putIfAbsent(serviceKey, new LeakyBucketItem(serviceKey, rate, 0L, currentTime, capacity));
+                    stats.putIfAbsent(serviceKey, new LeakyBucketItem(serviceKey, rate, currentTime, capacity));
                     break;
                 }
-                //滑动窗口限流算法
+                //滑动窗口限流
                 case "slidingWindow": {
                     //限流个数
                     int limitCount = url.getParameter("limitCount", 1);
@@ -45,10 +46,16 @@ public class ZywooTPSLimiter implements TPSLimiter {
                     int sampleCount = url.getParameter("sampleCount", 10);
                     //时间窗长度
                     int intervalInMs = url.getParameter("intervalInMs", 1000);
-                    stats.putIfAbsent(serviceKey,new SlidingWindowItem(limitCount,sampleCount,intervalInMs));
+                    stats.putIfAbsent(serviceKey, new SlidingWindowItem(serviceKey, limitCount, sampleCount, intervalInMs));
+                    break;
                 }
-                //令牌桶算法
-                //TODO
+                //Guava令牌桶限流
+                case "guavaRateLimit": {
+                    //每秒限流个数
+                    double permitsPerSecond = url.getParameter("permitsPerSecond", 1D);
+                    stats.putIfAbsent(serviceKey,new GuavaRateLimit(serviceKey,permitsPerSecond));
+                    break;
+                }
                 //无获取到限流算法,直接放行
                 default: {
                     return true;

@@ -10,21 +10,32 @@ import java.util.concurrent.atomic.LongAdder;
  */
 public class LeakyBucketItem implements LimitItem {
 
+    /**
+     * 服务名称
+     */
     private String name;
 
-    //每秒处理数(出水率)
+    /**
+     * 每秒处理数(出水率)
+     */
     private long rate;
 
-    //当前剩余水量
+    /**
+     * 当前剩余水量
+     */
     private LongAdder currentWater;
 
-    //最后刷新时间
+    /**
+     * 最后刷新时间
+     */
     private long refreshTime;
 
-    //桶容量
+    /**
+     * 桶容量
+     */
     private long capacity;
 
-    public LeakyBucketItem(String name, long rate, long currentWater, long refreshTime, long capacity) {
+    public LeakyBucketItem(String name, long rate, long refreshTime, long capacity) {
         this.name = name;
         this.rate = rate;
         this.currentWater =  new LongAdder();

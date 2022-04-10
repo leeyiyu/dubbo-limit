@@ -32,11 +32,13 @@ import org.springframework.beans.factory.annotation.Value;
  * @date: 2021/11/20 3:02 下午
  */
 //选择Dubbo固定窗口限流算法
-@DubboService(filter = {"tps"},parameters = {"tps","2","tps.interval","1000"})
+//@DubboService(filter = {"tps"},parameters = {"tps","2","tps.interval","1000"})
 //选择漏桶限流算法
 //@DubboService(filter = {"zywoo"},parameters = {"strategy","leakyBucket","rate","2","capacity","10"})
 //选择滑动窗口限流算法(时间窗切分数量10个,时间窗长度10000(10s),代表10s只能有5个通过)
 //@DubboService(filter = {"zywoo"},parameters = {"strategy","slidingWindow","limitCount","5","sampleCount","10","intervalInMs","10000"})
+//选择Guava令牌桶限流算法
+@DubboService(filter = "zywoo",parameters = {"strategy","guavaRateLimit","permitsPerSecond","2"})
 public class DemoServiceImpl implements DemoService {
 
     private final Logger logger = LoggerFactory.getLogger(getClass());

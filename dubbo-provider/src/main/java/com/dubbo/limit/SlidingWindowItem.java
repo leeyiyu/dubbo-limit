@@ -14,11 +14,20 @@ import java.util.concurrent.atomic.LongAdder;
  */
 public class SlidingWindowItem implements LimitItem {
 
+    /**
+     * 服务名称
+     */
+    private String name;
 
-    //限流次数
+
+    /**
+     * 限流次数
+     */
     private int limitCount;
 
-    //时间窗
+    /**
+     * 时间窗
+     */
     private final LeapArray data;
 
     /**
@@ -26,7 +35,8 @@ public class SlidingWindowItem implements LimitItem {
      * @param sampleCount  时间窗数量
      * @param intervalInMs 时间窗长度
      */
-    public SlidingWindowItem(int limitCount, int sampleCount, int intervalInMs) {
+    public SlidingWindowItem(String name, int limitCount, int sampleCount, int intervalInMs) {
+        this.name = name;
         this.limitCount = limitCount;
         this.data = new LeapArray(sampleCount, intervalInMs);
     }
