@@ -1,8 +1,6 @@
 package com.dubbo.limit.slidingWindow;
 
 
-import com.dubbo.limit.LimitItem;
-import com.dubbo.limit.slidingWindow.WindowWrap;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -15,7 +13,7 @@ import java.util.concurrent.locks.ReentrantLock;
  * @Date: 2022/4/2 15:57
  * @Description: 滑动窗口限流算法
  */
-public class LeapArray implements LimitItem {
+public class LeapArray {
     // 样本窗口长度
     private int windowLengthInMs;
     // 一个时间窗中包含的时间窗数量
@@ -48,15 +46,6 @@ public class LeapArray implements LimitItem {
         // 获取当前时间点所在的样本窗口
         return currentWindow(System.currentTimeMillis());
     }
-
-
-    @Override
-    public boolean isAllowed() {
-        //获取当前时间段在哪个滑动窗口
-
-        return true;
-    }
-
 
     public WindowWrap currentWindow(long timeMillis){
         if (timeMillis < 0) {
